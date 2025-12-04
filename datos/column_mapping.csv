@@ -1,0 +1,12 @@
+English,Spanish
+Tenure,Antiguedad
+WarehouseToHome,Distancia_Almacen
+NumberOfDeviceRegistered,Numero_Dispositivos
+PreferedOrderCat,Categoria_Preferida
+SatisfactionScore,Nivel_Satisfaccion
+MaritalStatus,Estado_Civil
+NumberOfAddress,Numero_Direcciones
+Complain,Queja
+DaySinceLastOrder,Dias_Ultima_Compra
+CashbackAmount,Monto_Cashback
+Churn,Target

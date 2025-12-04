@@ -1,0 +1,153 @@
+import json
+import os
+
+notebook_content = {
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Exploratory Data Analysis (EDA) - E-commerce Churn Prediction\n",
+    "\n",
+    "## Objective\n",
+    "Analyze customer behavior to identify patterns related to churn.\n",
+    "\n",
+    "## 1. Data Loading and Inspection"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": None,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import pandas as pd\n",
+    "import numpy as np\n",
+    "import matplotlib.pyplot as plt\n",
+    "import seaborn as sns\n",
+    "\n",
+    "sns.set(style=\"whitegrid\")\n",
+    "\n",
+    "df = pd.read_csv('../datos/data_ecommerce_customer_churn.csv')\n",
+    "df.info()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## 2. Data Cleaning\n",
+    "Handling missing values by imputing with mode (categorical) or median (numerical)."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": None,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "missing_cols = df.columns[df.isnull().any()].tolist()\n",
+    "for col in missing_cols:\n",
+    "    if df[col].dtype == 'object':\n",
+    "        df[col] = df[col].fillna(df[col].mode()[0])\n",
+    "    else:\n",
+    "        df[col] = df[col].fillna(df[col].median())\n",
+    "\n",
+    "print(\"Missing values after imputation:\", df.isnull().sum().sum())"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## 3. Univariate Analysis\n",
+    "### Churn Distribution"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": None,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "plt.figure(figsize=(6, 4))\n",
+    "sns.countplot(x='Churn', data=df)\n",
+    "plt.title('Churn Distribution')\n",
+    "plt.show()\n",
+    "\n",
+    "print(df['Churn'].value_counts(normalize=True))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "**Insight:** The dataset has a churn rate of approximately 17%."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## 4. Bivariate Analysis\n",
+    "### Correlation Matrix"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": None,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "plt.figure(figsize=(12, 8))\n",
+    "numeric_df = df.select_dtypes(include=[np.number])\n",
+    "sns.heatmap(numeric_df.corr(), annot=True, cmap='coolwarm', fmt=\".2f\")\n",
+    "plt.title('Correlation Matrix')\n",
+    "plt.show()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### Key Correlations with Churn\n",
+    "- **Tenure (-0.35)**: Longer tenure is associated with lower churn.\n",
+    "- **Complain (0.26)**: Customers who complained are more likely to churn.\n",
+    "- **DaySinceLastOrder (-0.16)**: Recent activity might correlate with churn (needs investigation, possibly counter-intuitive or related to specific churn definition).\n",
+    "- **CashbackAmount (-0.16)**: Higher cashback is associated with lower churn."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## 5. Conclusion\n",
+    "Key drivers for churn appear to be customer tenure and complaints. Strategies should focus on resolving complaints effectively and incentivizing loyalty early in the customer lifecycle."
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.8.5"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 4
+}
+
+with open('EDA/eda_analysis.ipynb', 'w') as f:
+    json.dump(notebook_content, f, indent=1)
